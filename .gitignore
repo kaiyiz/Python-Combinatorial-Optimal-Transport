@@ -1,0 +1,8 @@
+.eggs
+.pytest_cache
+PyCOT.egg-info
+build
+dist
+test.sh
+benchmark
+.DS_Store
