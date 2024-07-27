@@ -6,43 +6,43 @@ def feasibility_check(ind_b, ind_a, yB, yA, Ma, cost):
     if yA[ind_a] + yB[ind_b] > cost[ind_b][ind_a] + 1:
                 print("assertion failed")
     if Ma[ind_a] == ind_b and yA[ind_a] + yB[ind_b] != cost[ind_b][ind_a]:
-                print("assertion failed in matching")
+                print("assertion failed in assignment")
                 print(yA[ind_a] + yB[ind_b])
                 print(cost[ind_b][ind_a])
 
-def matching_check(Ma, Mb):
-    # check matching
+def assignment_check(Ma, Mb):
+    # check assignment
     if np.size(np.where(Mb == -1)) != 0:
-        print("exist empty matching")
+        print("exist empty assignment")
     if np.size(np.where(Ma == -1)) != 0:
-        print("exist empty matching")
+        print("exist empty assignment")
     for ind_b in range(Mb.shape[0]):
         ind_a = Mb[ind_b]
         if ind_a != -1 and ind_b != Ma[ind_a]:
-            print("mismatching")
+            print("misassignment")
     for ind_a in range(Ma.shape[0]):
         ind_b = Ma[ind_a]
         if ind_b != -1 and ind_a != Mb[ind_b]:
-            print("mismatching")
+            print("misassignment")
 
-def matching_check_torch(Ma, Mb):
-    # check matching
+def assignment_check_torch(Ma, Mb):
+    # check assignment
     if torch.size(torch.where(Mb == -1)) != 0:
-        print("exist empty matching")
+        print("exist empty assignment")
     if torch.size(torch.where(Ma == -1)) != 0:
-        print("exist empty matching")
+        print("exist empty assignment")
     for ind_b in range(Mb.shape[0]):
         ind_a = Mb[ind_b]
         if ind_a != -1 and ind_b != Ma[ind_a]:
-            print("mismatching")
+            print("misassignment")
     for ind_a in range(Ma.shape[0]):
         ind_b = Ma[ind_a]
         if ind_b != -1 and ind_a != Mb[ind_b]:
-            print("mismatching")
+            print("misassignment")
 
 def assignment_torch(W, C, delta, device, seed=1):
     """
-    This function computes an additive approximation of the bipartite matching between two discrete distributions.
+    This function computes an additive approximation of the bipartite assignment between two discrete distributions.
     This function is a GPU speed-up implementation of the push-relabel algorithm proposed in our paper.
 
     Parameters
@@ -57,13 +57,13 @@ def assignment_torch(W, C, delta, device, seed=1):
     Returns
     -------
     Mb : tensor
-        A 1 by n array, each i represents the index of type a vertex matching with ith type b vertex.
+        A 1 by n array, each i represents the index of type a vertex assignment with ith type b vertex.
     yA : tensor
         A 1 by n array, each i represents the final dual value of ith type a vertex.
     yB : tensor
         A 1 by n array, each i represents the final dual value of ith type b vertex.
     total_cost : tensor
-        The total cost of the final matching.
+        The total cost of the final assignment.
     iteration : tensor
         The number of iterations ran in while loop when this function finishes.
     """
@@ -139,9 +139,9 @@ def assignment_torch(W, C, delta, device, seed=1):
             Mb[ind_b] = ind_a
             Ma[ind_a] = ind_b
     
-    # matching_check(Ma, Mb) # check the validity of the matching
-    matching_cost = torch.sum(W[torch.arange(0,n,dtype=torch.int64),Mb])
-    return Mb, yA, yB, matching_cost, iteration
+    # assignment_check(Ma, Mb) # check the validity of the assignment
+    assignment_cost = torch.sum(W[torch.arange(0,n,dtype=torch.int64),Mb])
+    return Mb, yA, yB, assignment_cost, iteration
 
 def unique(x, input_sorted = False):
     """""

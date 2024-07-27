@@ -6,7 +6,7 @@ from cot.assignment import assignment_torch
 def test_assignment_torch_precomputed():
 # load the test data
     device = 'cpu'
-    cost = np.loadtxt('./test/test_data/asignment_cost_test.csv', delimiter=',')
+    cost = np.loadtxt('./test/test_data/assignment_cost_test.csv', delimiter=',')
     M_res = np.loadtxt('./test/test_data/assignment_M_res_test.csv', delimiter=',')
     total_cost_res = np.loadtxt('./test/test_data/assignment_total_cost_test.csv', delimiter=',')
     delta = np.loadtxt('./test/test_data/assignment_delta_test.csv', delimiter=',')
