@@ -4,5 +4,7 @@ PyCOT.egg-info
 build
 dist
 test.sh
+*.pyc
 benchmark
+archive
 .DS_Store

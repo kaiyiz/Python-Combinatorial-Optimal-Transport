@@ -242,4 +242,4 @@ def transport_torch(DA, SB, C, delta, device):
     # flow_validation_final(F, FreeA, DA, FreeB, SB, device)
 
     total_cost = torch.sum(F*C)
-    return F, yA, yB, total_cost, iteration
+    return F, yA, yB, total_cost

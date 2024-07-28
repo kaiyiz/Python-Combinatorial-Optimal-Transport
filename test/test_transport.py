@@ -15,7 +15,7 @@ def test_transport_torch():
     DA_tensor = torch.tensor(DA, device=device, requires_grad=False)
     SB_tensor = torch.tensor(SB, device=device, requires_grad=False)
     delta_tensor = torch.tensor(delta, device=device, requires_grad=False)
-    T, yA, yB, total_cost, iteration = transport_torch(DA_tensor, SB_tensor, cost_tensor, delta_tensor, device=device)
+    T, yA, yB, total_cost = transport_torch(DA_tensor, SB_tensor, cost_tensor, delta_tensor, device=device)
     assert np.allclose(T_res, T.numpy(), atol=1e-5)
     assert np.allclose(total_cost_res, total_cost.numpy(), atol=1e-5)
     assert np.allclose(np.sum(T.numpy(), axis=0), DA, atol=1e-5)

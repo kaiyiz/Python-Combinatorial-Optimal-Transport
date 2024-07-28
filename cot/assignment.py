@@ -40,6 +40,100 @@ def assignment_check_torch(Ma, Mb):
         if ind_b != -1 and ind_a != Mb[ind_b]:
             print("misassignment")
 
+def assignment(W, C, delta, seed=0):
+    """
+    This function computes an additive approximation of the bipartite assignment between two discrete distributions.
+    This function is a 100% CPU-based implementation of the push-relabel algorithm proposed in our paper.
+
+    Parameters
+    ----------
+    W : ndarray
+        A n by n cost matrix, each i and j represent the cost between ith type b and jth type a vertex.
+    C : scalar
+        The scale of cost metric, max value in of W.
+    delta : scalar
+        The scaling factor of cost metric.
+    
+    Returns
+    -------
+    Mb : ndarray
+        A 1 by n array, each i represents the index of type a vertex assignment with ith type b vertex.
+    yA : ndarray
+        A 1 by n array, each i represents the final dual value of ith type a vertex.
+    yB : ndarray
+        A 1 by n array, each i represents the final dual value of ith type b vertex.
+    total_cost : scalar
+        Total cost of the final assignment.
+    iteration : scalar
+        The number of iterations ran in while loop when this function finishes
+    """
+    n = W.shape[0]
+    S = (3*W//(delta)).astype(int) 
+    # cost = (3*W//(delta)).astype(int)
+    yB = np.ones(n, dtype=int)
+    yA = np.zeros(n, dtype=int)
+    Mb = np.ones(n, dtype=int) * -1
+    Ma = np.ones(n, dtype=int) * -1
+    f = n
+    iteration = 0
+
+    np.random.seed(seed)
+
+    while f > n*delta/C:
+        ind_b_free = np.where(Mb==-1)
+        ind_S_zero = np.where(S[ind_b_free]==0)
+
+        # find push edges
+        ind_b_tent_ind, free_S_edge_B_ind_range_lt_inclusive = np.unique(ind_S_zero[0],return_index=True) #get tentative B to push and left index of B range
+        ind_b_tent = ind_b_free[0][ind_b_tent_ind]
+        free_S_edge_B_ind_range_rt_exclusive = np.append(free_S_edge_B_ind_range_lt_inclusive[1:], len(ind_S_zero[0])) #right index of B range
+        free_S_edge_B_ind_rand = np.random.randint(free_S_edge_B_ind_range_lt_inclusive, free_S_edge_B_ind_range_rt_exclusive) #random pick an index from each unique B range
+        ind_a_tent = ind_S_zero[1][free_S_edge_B_ind_rand] #get tentative A to push
+        ind_a_push, tent_ind = np.unique(ind_a_tent, return_index=True) #find exact a to push, and corresponding index 
+        ind_b_push = ind_b_tent[tent_ind] #find exact b to push
+        # find release edges
+        ind_release = np.nonzero(Ma[ind_a_push] != -1)[0]
+        edges_released = (Ma[ind_a_push][ind_release], ind_a_push[ind_release])
+        # update flow
+        f -= len(ind_a_push)-len(ind_release) 
+        # release edges
+        Mb[Ma[edges_released[1]]] = -1
+        # push edges
+        edges_pushed = (ind_b_push, ind_a_push)
+        Ma[ind_a_push] = ind_b_push
+        Mb[ind_b_push] = ind_a_push
+        yA[ind_a_push] -= 1
+        # find b that not able to be pushed
+        ind_b_not_pushed = np.setdiff1d(ind_b_free[0], ind_b_tent)
+        yB[ind_b_not_pushed] += 1
+        #update slack
+        S[edges_released] += 1
+        S[edges_pushed] -= 1
+        S[:,edges_pushed[1]] += 1
+        S[ind_b_not_pushed, :] -= 1
+        iteration += 1
+
+    # for ind_b in range(n):
+    #     for ind_a in range(n):
+    #         feasibility_check(ind_b, ind_a, yB, yA, Ma, cost)
+
+    ind_a = 0
+    for ind_b in range(n):
+        if Mb[ind_b] == -1:
+            while Ma[ind_a] != -1:
+                ind_a += 1
+            Mb[ind_b] = ind_a
+            Ma[ind_a] = ind_b
+
+    # assignment_check(Ma, Mb)
+    # print("assignment check passed")
+
+    assignment_cost = 0
+    for ind_b in range(n):
+        assignment_cost += W[ind_b, Mb[ind_b]]
+    assignment_cost = assignment_cost/n
+    return Mb, yA, yB, assignment_cost
+
 def assignment_torch(W, C, delta, device, seed=1):
     """
     This function computes an additive approximation of the bipartite assignment between two discrete distributions.
@@ -141,7 +235,8 @@ def assignment_torch(W, C, delta, device, seed=1):
     
     # assignment_check(Ma, Mb) # check the validity of the assignment
     assignment_cost = torch.sum(W[torch.arange(0,n,dtype=torch.int64),Mb])
-    return Mb, yA, yB, assignment_cost, iteration
+    assignment_cost = assignment_cost/n
+    return Mb, yA, yB, assignment_cost
 
 def unique(x, input_sorted = False):
     """""

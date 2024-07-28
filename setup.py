@@ -3,7 +3,7 @@ from setuptools import find_packages, setup
 setup(
     name='PyCoOT',
     packages=find_packages(include=['cot']),
-    version='0.1.01',
+    version='0.1.1',
     description='PyCoOT: Python Combinatorial Optimal Transport',
     author='Kaiyi Zhang',
     license='MIT',
