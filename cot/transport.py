@@ -73,7 +73,7 @@ def subset_sum_filter(F, sum, dim=0):
 def transport_torch(DA, SB, C, delta, device):
     """
     This function computes an additive approximation of optimal transport between two discrete distributions.
-    This function is a GPU speed-up implementation of the push-relabel algorithm proposed in our paper.
+    This function is a GPU speed-up implementation of the push-relabel algorithm proposed in our paper [2].
 
     Parameters
     ----------
@@ -90,15 +90,18 @@ def transport_torch(DA, SB, C, delta, device):
     -------
     F, yA, yB, total_cost, iteration
     F : tensor
-        A n by n matrix, each i and j represents the flow between ith type b and jth type a vertex.
+        A n by n matrix, each i and j represents the flow (transport plan) between ith type b and jth type a vertex.
     yA : tensor
         A 1 by n array, each i represents the final dual value of ith type a vertex.
     yB : tensor
         A 1 by n array, each i represents the final dual value of ith type b vertex.
     total_cost : tensor
         The total cost of the final transport solution.
-    iteration : tensor
-        The number of iterations ran in while loop when this function finishes.
+
+    References
+    ----------
+    .. [2] Lahn, Nathaniel, Sharath Raghvendra, and Kaiyi Zhang. A combinatorial algorithm for approximating the optimal transport 
+    in the parallel and mpc settings. Advances in Neural Information Processing Systems (NeurIPS) 36, 2023
     """
     torch.manual_seed(0)
     dtyp = torch.int32

@@ -64,8 +64,6 @@ def assignment(W, C, delta, seed=0):
         A 1 by n array, each i represents the final dual value of ith type b vertex.
     total_cost : scalar
         Total cost of the final assignment.
-    iteration : scalar
-        The number of iterations ran in while loop when this function finishes
     """
     n = W.shape[0]
     S = (3*W//(delta)).astype(int) 
@@ -158,8 +156,6 @@ def assignment_torch(W, C, delta, device, seed=1):
         A 1 by n array, each i represents the final dual value of ith type b vertex.
     total_cost : tensor
         The total cost of the final assignment.
-    iteration : tensor
-        The number of iterations ran in while loop when this function finishes.
     """
     dtyp = torch.int64
     n = W.shape[1]
