@@ -10,7 +10,7 @@ setup(
     package_data={
         'cot': ['optimaltransport.jar'],
     },
-    install_requires=["numpy==1.24", "scipy==1.11", "torch==1.13"],
+    install_requires=["numpy==1.24", "scipy==1.11", "torch==1.13", "jpype1==1.5.0"],
     setup_requires=['pytest-runner'],
     tests_require=['pytest==4.4.1'],
     test_suite="tests",

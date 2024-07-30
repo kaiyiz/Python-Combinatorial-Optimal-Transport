@@ -1,6 +1,7 @@
 import numpy as np
 import torch
 from cot.transport import transport_torch
+from cot.LMR import transport_lmr, OT_Profile, RPW
 
 def test_transport_torch():
     device = 'cpu'
@@ -20,3 +21,30 @@ def test_transport_torch():
     assert np.allclose(total_cost_res, total_cost.numpy(), atol=1e-5)
     assert np.allclose(np.sum(T.numpy(), axis=0), DA, atol=1e-5)
     assert np.allclose(np.sum(T.numpy(), axis=1), SB, atol=1e-5)
+
+def test_LMR_precomputed():
+    DA = np.loadtxt('./test/test_data/transport_A_B_test.csv', delimiter=',')[0]
+    SB = np.loadtxt('./test/test_data/transport_A_B_test.csv', delimiter=',')[1]
+    cost = np.loadtxt('./test/test_data/transport_cost_test.csv', delimiter=',')
+    ot_cost_lmr_res = np.loadtxt('./test/test_data/ot_cost_lmr.csv', delimiter=',')
+    delta = np.loadtxt('./test/test_data/transport_delta_test.csv', delimiter=',')
+    ot_cost_lmr = transport_lmr(DA, SB, cost, delta)
+    assert np.allclose(ot_cost_lmr_res, ot_cost_lmr, atol=1e-5)
+
+def test_OT_Profile_precomputed():
+    DA = np.loadtxt('./test/test_data/transport_A_B_test.csv', delimiter=',')[0]
+    SB = np.loadtxt('./test/test_data/transport_A_B_test.csv', delimiter=',')[1]
+    cost = np.loadtxt('./test/test_data/transport_cost_test.csv', delimiter=',')
+    ot_profile_res = np.loadtxt('./test/test_data/ot_profile.csv', delimiter=',')
+    delta = np.loadtxt('./test/test_data/transport_delta_test.csv', delimiter=',')
+    ot_profile = OT_Profile(DA, SB, cost, delta)
+    assert np.allclose(ot_profile_res, ot_profile, atol=1e-5)
+
+def test_RPW_precomputed():
+    DA = np.loadtxt('./test/test_data/transport_A_B_test.csv', delimiter=',')[0]
+    SB = np.loadtxt('./test/test_data/transport_A_B_test.csv', delimiter=',')[1]
+    cost = np.loadtxt('./test/test_data/transport_cost_test.csv', delimiter=',')
+    rpw_dist_res = np.loadtxt('./test/test_data/rpw_dist.csv', delimiter=',')
+    delta = np.loadtxt('./test/test_data/transport_delta_test.csv', delimiter=',')
+    rpw_dist = RPW(DA, SB, cost, delta)
+    assert np.allclose(rpw_dist_res, rpw_dist, atol=1e-5)

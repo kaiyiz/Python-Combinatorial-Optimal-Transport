@@ -54,7 +54,8 @@ def OT_Profile(DA, SB, C, delta, p=1):
     
     Returns
     -------
-
+    OT_profile : ndarray
+        A 2 by k array, first row represent the amount of transported flow, second row represent the corresponding optimal partial transport.
 
     References
     ----------
@@ -90,6 +91,20 @@ def OT_Profile(DA, SB, C, delta, p=1):
     return OT_profile
 
 def RPW(X=None, Y=None, dist=None, delta=0.1, k=1, p=1):
+    """
+
+    Args:
+        X ([type], optional): Defaults to None.
+        Y ([type], optional): Defaults to None.
+        dist ([type], optional): Defaults to None.
+        delta (float, optional): Defaults to 0.1.
+        k (int, optional): Defaults to 1.
+        p (int, optional): [Defaults to 1.
+
+    Returns:
+        RPW distance (float)
+        RPW distance between two discrete distributions
+    """
     # delta : acceptable additive error
     # q_idx : index to get returned values
     nz = len(X)
