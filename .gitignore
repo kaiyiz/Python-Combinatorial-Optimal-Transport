@@ -1,7 +1,9 @@
 .eggs
 .pytest_cache
 PyCOT.egg-info
+.DS_Store
 build
+paper
 dist
 test.sh
 *.pyc

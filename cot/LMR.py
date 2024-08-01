@@ -55,7 +55,7 @@ def OT_Profile(DA, SB, C, delta, p=1):
     Returns
     -------
     OT_profile : ndarray
-        A 2 by k array, first row represent the amount of transported flow, second row represent the corresponding optimal partial transport.
+        A 2 by k array, first row represent the amount of transported mass, second row represent the corresponding cost of optimal partial transport.
 
     References
     ----------
