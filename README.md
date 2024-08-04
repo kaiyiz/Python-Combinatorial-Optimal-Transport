@@ -1,5 +1,11 @@
 # Python Combinatorial Optimal Transport (PyCoOT)
 
+## Installation
+
+```bash
+pip install PyCoOT
+```
+
 ## Overview
 
 **PyCoOT** is a Python library for optimal transport computation using combinatorial methods, offering state-of-the-art algorithms to compute additive approximations of optimal transport distances between discrete distributions. PyCoOT supports large-scale computations through GPU acceleration, making it a powerful tool for OT problems. Additionaly, our library leverages the properties of combinatorial algorithms to compute various OT related problems efficiently.
@@ -11,12 +17,6 @@
 - **Fast Assignment Problem Solution:** Faster impletation for approximate assignment problems, a special case of OT, and also supporting GPU acceleration.
 - **Optimal Transport Profile:** Detailed calculation of optimal transport profiles between discrete distributions.
 - **Robust Partial $p$-Wasserstein Distance:** An outlier robust metric for comparing distributions based on partial $p$-Wasserstein distance.
-
-## Installation
-
-```bash
-pip install PyCoOT
-```
 
 ## Quick Start
 
@@ -144,7 +144,7 @@ The modules `cot.assignment`, `cot.assignment_torch`, and `cot.transport_torch` 
 }
 ```
 
-### Computing-all-optimal-partial-transport
+### Computing All Optimal Partial Transport
 
 The `LMR.OT_Profile` implementation is based on [research](https://github.com/kaiyiz/Computing-all-optimal-partial-transport) exploring methods for computing all partial optimal transports between discrete distributions. 
 

@@ -5,7 +5,13 @@ from jpype.types import *
 import pkg_resources
 
 jarLocation = pkg_resources.resource_filename('cot', 'optimaltransport.jar')
-jpype.startJVM("-Xmx128g", classpath=[jarLocation])
+try:
+    jpype.startJVM("-Xmx128g", classpath=[jarLocation])
+except OSError as e:
+    if 'JVM is already started' in str(e):
+        pass
+    else:
+        raise e
 # jpype.startJVM("-Xmx128g", classpath=['./optimaltransport.jar'])
 from optimaltransport import Mapping
 

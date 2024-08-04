@@ -1,12 +1,22 @@
 .eggs
 .pytest_cache
-PyCOT.egg-info
 .DS_Store
-build
 paper
-dist
 test.sh
 *.pyc
 benchmark
 archive
 .DS_Store
+
+#packaging/build
+build
+dist
+*.egg-info
+
+# sphinx
+docs/_build
+docs/source/gen_modules
+
+# other
+dir_tree.txt
+print_tree.py
