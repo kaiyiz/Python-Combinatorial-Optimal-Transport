@@ -15,7 +15,7 @@ except OSError as e:
 # jpype.startJVM("-Xmx128g", classpath=['./optimaltransport.jar'])
 from optimaltransport import Mapping
 
-def transport_lmr(DA, SB, C, delta):
+def transport_lmr(DA, SB, C, eps):
     """
     This function computes an additive approximation of 1-wasserstein distance between two discrete distributions [1]
 
@@ -27,7 +27,7 @@ def transport_lmr(DA, SB, C, delta):
         A n by 1 array, each SB(i) represent the mass of supply on ith type b vertex. The sum of SB should equal to 1.
     C : tensor
         A n by n cost matrix, each i and j represent the cost between ith type b and jth type a vertex.
-    delta : tensor
+    eps : tensor
         The scaling factor (scalar) of cost metric. The value of epsilon in paper. 
     
     Returns
@@ -40,11 +40,11 @@ def transport_lmr(DA, SB, C, delta):
         Advances in Neural Information Processing Systems (NeurIPS) 32, 2019
     """
     nz = len(DA)
-    gtSolver = Mapping(nz, list(DA), list(SB), C, delta)
+    gtSolver = Mapping(nz, list(DA), list(SB), C, eps)
     ot_cost = gtSolver.getTotalCost()
     return ot_cost
 
-def ot_profile(DA, SB, C, delta, p=1):
+def ot_profile(DA, SB, C, eps, p=1):
     """
     This function computes the OT-profile between two discrete distributions [3]
 
@@ -56,7 +56,7 @@ def ot_profile(DA, SB, C, delta, p=1):
         A n by 1 array, each SB(i) represent the mass of supply on ith type b vertex. The sum of SB should equal to 1.
     C : tensor
         A n by n cost matrix, each i and j represent the cost between ith type b and jth type a vertex.
-    delta : tensor
+    eps : tensor
         The scaling factor (scalar) of cost metric. The value of epsilon in paper. 
     
     Returns
@@ -68,12 +68,12 @@ def ot_profile(DA, SB, C, delta, p=1):
     ----------
     .. [3] Phatak, Abhijeet, et al. Computing all optimal partial transports. International Conference on Learning Representations (ICLR). 2023.
     """
-    # delta : acceptable additive error
+    # eps : acceptable additive error
     # q_idx : index to get returned values
     nz = len(DA)
     C = C**p
-    alphaa = 4.0*np.max(C)/delta
-    gtSolver = Mapping(nz, list(DA), list(SB), C, delta)
+    alphaa = 4.0*np.max(C)/eps
+    gtSolver = Mapping(nz, list(DA), list(SB), C, eps)
     APinfo = np.array(gtSolver.getAPinfo()) # augmenting path information
     # 0->Number of iterations(phase id)
     # 1->Length of augmenting path(AP)
@@ -97,14 +97,14 @@ def ot_profile(DA, SB, C, delta, p=1):
     OT_profile = np.vstack((flowProgress, cumCost))
     return OT_profile
 
-def rpw(X=None, Y=None, dist=None, delta=0.1, k=1, p=1):
+def rpw(X=None, Y=None, dist=None, eps=0.1, k=1, p=1):
     """
 
     Args:
         X ([type], optional): Defaults to None.
         Y ([type], optional): Defaults to None.
         dist ([type], optional): Defaults to None.
-        delta (float, optional): Defaults to 0.1.
+        eps (float, optional): Defaults to 0.1.
         k (int, optional): Defaults to 1.
         p (int, optional): [Defaults to 1.
 
@@ -112,12 +112,12 @@ def rpw(X=None, Y=None, dist=None, delta=0.1, k=1, p=1):
         rpw distance (float)
         rpw distance between two discrete distributions
     """
-    # delta : acceptable additive error
+    # eps : acceptable additive error
     # q_idx : index to get returned values
     nz = len(X)
     dist = dist**p
-    alphaa = 4.0*np.max(dist)/delta
-    gtSolver = Mapping(nz, list(X), list(Y), dist, delta)
+    alphaa = 4.0*np.max(dist)/eps
+    gtSolver = Mapping(nz, list(X), list(Y), dist, eps)
     APinfo = np.array(gtSolver.getAPinfo()) # augmenting path information
     # 0->Number of iterations(phase id)
     # 1->Length of augmenting path(AP)

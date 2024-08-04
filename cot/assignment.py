@@ -40,7 +40,7 @@ def assignment_check_torch(Ma, Mb):
         if ind_b != -1 and ind_a != Mb[ind_b]:
             print("misassignment")
 
-def assignment(W, C, delta, seed=0):
+def assignment(W, C, eps, seed=0):
     """
     This function computes an additive approximation of the bipartite assignment between two discrete distributions.
     This function is a 100% CPU-based implementation of the push-relabel algorithm proposed in our paper.
@@ -51,7 +51,7 @@ def assignment(W, C, delta, seed=0):
         A n by n cost matrix, each i and j represent the cost between ith type b and jth type a vertex.
     C : scalar
         The scale of cost metric, max value in of W.
-    delta : scalar
+    eps : scalar
         The scaling factor of cost metric.
     
     Returns
@@ -66,8 +66,8 @@ def assignment(W, C, delta, seed=0):
         Total cost of the final assignment.
     """
     n = W.shape[0]
-    S = (3*W//(delta)).astype(int) 
-    # cost = (3*W//(delta)).astype(int)
+    S = (3*W//(eps)).astype(int) 
+    # cost = (3*W//(eps)).astype(int)
     yB = np.ones(n, dtype=int)
     yA = np.zeros(n, dtype=int)
     Mb = np.ones(n, dtype=int) * -1
@@ -77,7 +77,7 @@ def assignment(W, C, delta, seed=0):
 
     np.random.seed(seed)
 
-    while f > n*delta/C:
+    while f > n*eps/C:
         ind_b_free = np.where(Mb==-1)
         ind_S_zero = np.where(S[ind_b_free]==0)
 
@@ -132,7 +132,7 @@ def assignment(W, C, delta, seed=0):
     assignment_cost = assignment_cost/n
     return Mb, yA, yB, assignment_cost
 
-def assignment_torch(W, C, delta, device, seed=1):
+def assignment_torch(W, C, eps, device, seed=1):
     """
     This function computes an additive approximation of the bipartite assignment between two discrete distributions.
     This function is a GPU speed-up implementation of the push-relabel algorithm proposed in our paper.
@@ -143,7 +143,7 @@ def assignment_torch(W, C, delta, device, seed=1):
         A n by n cost matrix, each i and j represent the cost between ith type b and jth type a vertex.
     C : tensor
         The scale of cost metric, max value in of W.
-    delta : tensor
+    eps : tensor
         The scaling factor of cost metric.
     
     Returns
@@ -161,8 +161,8 @@ def assignment_torch(W, C, delta, device, seed=1):
     n = W.shape[1]
     m = W.shape[0]
 
-    S = (3*W/(delta)).type(dtyp).to(device)
-    # cost = (3*W/(delta)).type(dtyp).to(device) # scaled cost for feasibility validation
+    S = (3*W/(eps)).type(dtyp).to(device)
+    # cost = (3*W/(eps)).type(dtyp).to(device) # scaled cost for feasibility validation
     yB = torch.ones(m, device=device, dtype=dtyp, requires_grad=False)
     yA = torch.zeros(n, device=device, dtype=dtyp, requires_grad=False)
     Mb = torch.ones(m, device=device, dtype=dtyp, requires_grad=False) * -1
@@ -176,7 +176,7 @@ def assignment_torch(W, C, delta, device, seed=1):
     one = torch.tensor([1], device=device, dtype=dtyp, requires_grad=False)[0]
     m_one = torch.tensor([-1], device=device, dtype=dtyp, requires_grad=False)[0]
 
-    f_threshold = n*delta/C
+    f_threshold = n*eps/C
 
     torch.manual_seed(1)
     while f > f_threshold:

@@ -69,7 +69,7 @@ def subset_sum_filter(F, sum, dim=0):
     return F, F_mask_full
 
 
-def transport_torch(DA, SB, C, delta, device):
+def transport_torch(DA, SB, C, eps, device):
     """
     This function sloves the additive approximation of optimal transport problem between two discrete distributions and returns the transports plan, dual variables and total cost.
     This function is an implementation of a parallelizable combinatorial algorithm proposed in :ref:`[2]`.
@@ -82,7 +82,7 @@ def transport_torch(DA, SB, C, delta, device):
         A n by 1 array, each SB(i) represent the mass of supply on ith type b vertex. The sum of SB should equal to 1.
     C : tensor
         A n by n cost matrix, each i and j represent the cost between ith type b and jth type a vertex.
-    delta : tensor
+    eps : tensor
         The scaling factor (scalar) of cost metric. The value of epsilon in paper. 
     
 
@@ -118,11 +118,11 @@ def transport_torch(DA, SB, C, delta, device):
 
     F = torch.zeros(C.shape, device=device, dtype=dtyp, requires_grad=False)
     yFA = torch.full(C.shape, one, device=device, dtype=dtyp, requires_grad=False) # dual weight of type A vertice that matched to certain type B vertice, default value torch.iinfo.min when no matching
-    S = torch.div((3*C), delta, rounding_mode='trunc').type(dtyp).to(device)
-    # C_scaled = torch.div((3*C), delta, rounding_mode='trunc').type(dtyp).to(device) # scaled cost for feasibility validation
+    S = torch.div((3*C), eps, rounding_mode='trunc').type(dtyp).to(device)
+    # C_scaled = torch.div((3*C), eps, rounding_mode='trunc').type(dtyp).to(device) # scaled cost for feasibility validation
 
     max_C = torch.max(C)
-    alpha = 6 * n * max_C / delta
+    alpha = 6 * n * max_C / eps
     FreeA_ = DA * alpha 
     FreeA = torch.ceil(FreeA_).to(dtyp)
     FreeA_ori = FreeA.clone()
