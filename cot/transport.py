@@ -47,10 +47,9 @@ def slack_validation(yB, yA, S, C):
         print("slack not valid")
 
 def unique2(x, input_sorted = False):
-    """""
-    Returns the unique elements of array x, and the indices of the first occurrences of the unique values in the original array
-    Method 2
-    """""
+    # Returns the unique elements of array x, and the indices of the first occurrences of the unique values in the original array
+    # Method 2
+
     unique, inverse_ind, unique_count = torch.unique(x, return_inverse=True, return_counts=True)
     unique_ind = unique_count.cumsum(0)
     if not unique_ind.size()[0] == 0:
@@ -72,8 +71,8 @@ def subset_sum_filter(F, sum, dim=0):
 
 def transport_torch(DA, SB, C, delta, device):
     """
-    This function computes an additive approximation of optimal transport between two discrete distributions.
-    This function is a GPU speed-up implementation of the push-relabel algorithm proposed in our paper [2].
+    This function sloves the additive approximation of optimal transport problem between two discrete distributions and returns the transports plan, dual variables and total cost.
+    This function is an implementation of a parallelizable combinatorial algorithm proposed in :ref:`[2]`.
 
     Parameters
     ----------
@@ -86,9 +85,10 @@ def transport_torch(DA, SB, C, delta, device):
     delta : tensor
         The scaling factor (scalar) of cost metric. The value of epsilon in paper. 
     
+
     Returns
     -------
-    F, yA, yB, total_cost, iteration
+    F, yA, yB, total_cost
     F : tensor
         A n by n matrix, each i and j represents the flow (transport plan) between ith type b and jth type a vertex.
     yA : tensor
@@ -98,10 +98,12 @@ def transport_torch(DA, SB, C, delta, device):
     total_cost : tensor
         The total cost of the final transport solution.
 
+
     References
     ----------
     .. [2] Lahn, Nathaniel, Sharath Raghvendra, and Kaiyi Zhang. A combinatorial algorithm for approximating the optimal transport 
     in the parallel and mpc settings. Advances in Neural Information Processing Systems (NeurIPS) 36, 2023
+
     """
     torch.manual_seed(0)
     dtyp = torch.int32

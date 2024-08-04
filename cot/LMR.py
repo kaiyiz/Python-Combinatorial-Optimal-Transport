@@ -32,6 +32,7 @@ def transport_lmr(DA, SB, C, delta):
     
     Returns
     -------
+    ot_cost : float
 
     References
     ----------
@@ -43,7 +44,7 @@ def transport_lmr(DA, SB, C, delta):
     ot_cost = gtSolver.getTotalCost()
     return ot_cost
 
-def OT_Profile(DA, SB, C, delta, p=1):
+def ot_profile(DA, SB, C, delta, p=1):
     """
     This function computes the OT-profile between two discrete distributions [3]
 
@@ -60,7 +61,7 @@ def OT_Profile(DA, SB, C, delta, p=1):
     
     Returns
     -------
-    OT_profile : ndarray
+    ot_profile : ndarray
         A 2 by k array, first row represent the amount of transported mass, second row represent the corresponding cost of optimal partial transport.
 
     References
@@ -96,7 +97,7 @@ def OT_Profile(DA, SB, C, delta, p=1):
     OT_profile = np.vstack((flowProgress, cumCost))
     return OT_profile
 
-def RPW(X=None, Y=None, dist=None, delta=0.1, k=1, p=1):
+def rpw(X=None, Y=None, dist=None, delta=0.1, k=1, p=1):
     """
 
     Args:
@@ -108,8 +109,8 @@ def RPW(X=None, Y=None, dist=None, delta=0.1, k=1, p=1):
         p (int, optional): [Defaults to 1.
 
     Returns:
-        RPW distance (float)
-        RPW distance between two discrete distributions
+        rpw distance (float)
+        rpw distance between two discrete distributions
     """
     # delta : acceptable additive error
     # q_idx : index to get returned values
