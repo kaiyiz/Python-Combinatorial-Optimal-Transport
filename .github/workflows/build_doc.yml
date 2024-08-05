@@ -36,7 +36,7 @@ jobs:
       uses: rickstaa/sphinx-action@master
       with:
         docs-folder: "docs/"
-    - uses: actions/upload-artifact@v4
+    - uses: actions/upload-pages-artifact@v1
       with:
         name: github-pages
         path: docs/_build/html/
@@ -61,12 +61,11 @@ jobs:
       #     name: Documentation
       
       - name: Deploy Documentation
-        id: deployment
         # uses: peaceiris/actions-gh-pages@v3
         uses: actions/deploy-pages@v4 # or specific "vX.X.X" version tag for this action
-        # with:
-        #   name: github-pages
-          # github_token: ${{ secrets.GITHUB_TOKEN }}
-          # publish_dir: .
+        with:
+          name: Documentation
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: .
           # user_name: "kaiyiz"
           # user_email: "zhang_kaiyi@outlook.com"
