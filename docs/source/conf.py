@@ -39,11 +39,10 @@ extensions = [
     'sphinx.ext.viewcode',
     'sphinx.ext.autosummary',
     'myst_parser',
-    'sphinxcontrib.bibtex',
 ]
 
 # bib config
-bibtex_bibfiles = ['refs.bib']
+# bibtex_bibfiles = ['refs.bib']
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['_templates']

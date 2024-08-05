@@ -126,7 +126,7 @@ def rpw(DA=None, SB=None, dist=None, eps=0.1, k=1, p=1):
 
     Returns
     -------
-    res : float
+    pk_rpw : float
         The computed approximated RPW distance between the two distributions.
 
     References
@@ -177,8 +177,8 @@ def rpw(DA=None, SB=None, dist=None, eps=0.1, k=1, p=1):
     d_ind_a = np.nonzero(d_cost<=0)[0][0]-1
     d_ind_b = d_ind_a + 1
     alpha = find_intersection_point(flowProgress[d_ind_a], d_cost[d_ind_a], flowProgress[d_ind_b], d_cost[d_ind_b])
-    res = 1 - alpha
-    return res
+    pk_rpw = 1 - alpha
+    return pk_rpw
 
 def find_intersection_point(x1, y1, x2, y2):
     # x1 < x2
