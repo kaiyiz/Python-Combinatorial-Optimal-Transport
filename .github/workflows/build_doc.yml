@@ -63,4 +63,4 @@ jobs:
             github_token: ${{ secrets.GITHUB_TOKEN }}
             publish_dir: .
             user_name: "kaiyiz"
-            user_email: "kaiyizhang0809@gmail.com"
+            user_email: "zhang_kaiyi@outlook.com"
