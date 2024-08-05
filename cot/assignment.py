@@ -42,28 +42,34 @@ def assignment_check_torch(Ma, Mb):
 
 def assignment(W, C, eps, seed=0):
     """
-    This function computes an additive approximation of the bipartite assignment between two discrete distributions.
-    This function is a 100% CPU-based implementation of the push-relabel algorithm proposed in our paper.
+    This function sloves an additive approximation of the assignment problem between two discrete distributions and returns assignment plan and cost.
+    This function is a numpy implementation version of the parallelizable combinatorial algorithm [2]_ for assignment problem.
 
     Parameters
-    ----------
-    W : ndarray
-        A n by n cost matrix, each i and j represent the cost between ith type b and jth type a vertex.
-    C : scalar
-        The scale of cost metric, max value in of W.
-    eps : scalar
-        The scaling factor of cost metric.
+    ----------------
+    W : numpy array, shape (n, n)
+        A n by n cost matrix, each W(i,j) represents the cost between i-th type b and j-th type vertex from the samples of supply and demand distribution.
+    C : float
+        The scale of cost metric.
+    eps : float
+        The additive error of optimal transport distance, the value of :math:`\epsilon` in paper [2]_.
     
     Returns
-    -------
-    Mb : ndarray
-        A 1 by n array, each i represents the index of type a vertex assignment with ith type b vertex.
-    yA : ndarray
+    ----------------
+    Mb : numpy array, shape (n,)
+        A 1 by n array, each i represents the index of type a vertex (j-th column in cost matrix, i.e. W[:,j]) that is assigned with ith type b vertex.
+    yA : numpy array, shape (n,)
         A 1 by n array, each i represents the final dual value of ith type a vertex.
-    yB : ndarray
+    yB : numpy array, shape (n,)
         A 1 by n array, each i represents the final dual value of ith type b vertex.
-    total_cost : scalar
+    total_cost : float
         Total cost of the final assignment.
+
+    References
+    ----------------
+
+    .. [2] Lahn, Nathaniel, Sharath Raghvendra, and Kaiyi Zhang. A combinatorial algori-thm for approximating the optimal transport in the parallel and mpc settings. Advances in Neural Information Processing Systems (NeurIPS) 36, 2023
+
     """
     n = W.shape[0]
     S = (3*W//(eps)).astype(int) 
@@ -134,28 +140,36 @@ def assignment(W, C, eps, seed=0):
 
 def assignment_torch(W, C, eps, device, seed=1):
     """
-    This function computes an additive approximation of the bipartite assignment between two discrete distributions.
-    This function is a GPU speed-up implementation of the push-relabel algorithm proposed in our paper.
+    This function sloves an additive approximation of the assignment problem between two discrete distributions and returns assignment plan and cost.
+    This function is a torch implementation version of the parallelizable combinatorial algorithm [2]_ for assignment problem.
 
     Parameters
-    ----------
-    W : tensor
-        A n by n cost matrix, each i and j represent the cost between ith type b and jth type a vertex.
+    ----------------
+    W : tensor, shape (n, n)
+        A n by n cost matrix, each W(i,j) represents the cost between i-th type b and j-th type vertex from the samples of supply and demand distribution.
     C : tensor
-        The scale of cost metric, max value in of W.
+        The scale of cost metric.
     eps : tensor
-        The scaling factor of cost metric.
+        The additive error of optimal transport distance, the value of :math:`\epsilon` in paper [2]_.
+    device : torch.device
+        The device where the computation will be executed. (e.g. torch.device('cuda:0') for GPU)
     
     Returns
-    -------
-    Mb : tensor
-        A 1 by n array, each i represents the index of type a vertex assignment with ith type b vertex.
-    yA : tensor
+    ----------------
+    Mb : tensor, shape (n,)
+        A 1 by n array, each i represents the index of type a vertex (j-th column in cost matrix, i.e. W[:,j]) that is assigned with ith type b vertex.
+    yA : tensor, shape (n,)
         A 1 by n array, each i represents the final dual value of ith type a vertex.
-    yB : tensor
+    yB : tensor, shape (n,)
         A 1 by n array, each i represents the final dual value of ith type b vertex.
-    total_cost : tensor
-        The total cost of the final assignment.
+    total_cost : float
+        Total cost of the final assignment.
+
+    References
+    ----------------
+
+    .. [2] Lahn, Nathaniel, Sharath Raghvendra, and Kaiyi Zhang. A combinatorial algori-thm for approximating the optimal transport in the parallel and mpc settings. Advances in Neural Information Processing Systems (NeurIPS) 36, 2023
+
     """
     dtyp = torch.int64
     n = W.shape[1]

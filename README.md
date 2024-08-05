@@ -167,11 +167,10 @@ The `LMR.RPW` module is derived from [research](https://github.com/kaiyiz/Robust
 **Citation:**
 
 ```
-@article{raghvendra2024new,
-  title={A New Robust Partial $ p $-Wasserstein-Based Metric for Comparing Distributions},
+@inproceedings{raghvendranew,
+  title={A New Robust Partial p-Wasserstein-Based Metric for Comparing Distributions},
   author={Raghvendra, Sharath and Shirzadian, Pouyan and Zhang, Kaiyi},
-  journal={arXiv preprint arXiv:2405.03664},
-  year={2024}
+  booktitle={Forty-first International Conference on Machine Learning}
 }
 ```
 

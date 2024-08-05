@@ -42,7 +42,7 @@ def feasibilty_validation(yFA, yB, yA, F, C):
 
 def slack_validation(yB, yA, S, C):
     # check slack
-    # Only need to check S with yA and yB
+    # Only need to check S wi-th yA and yB
     if (S != C + 1 - yB[:,None] - yA[None, :]).any():
         print("slack not valid")
 
@@ -72,37 +72,37 @@ def subset_sum_filter(F, sum, dim=0):
 def transport_torch(DA, SB, C, eps, device):
     """
     This function sloves the additive approximation of optimal transport problem between two discrete distributions and returns the transports plan, dual variables and total cost.
-    This function is an implementation of a parallelizable combinatorial algorithm proposed in :ref:`[2]`.
+    This function is a PyTorch implementation version of the parallelizable combinatorial algorithm [2]_ for OT.
 
     Parameters
-    ----------
-    DA : ndarray
-        A n by 1 array, each DA(i) represent the mass of demand on ith type a vertex. The sum of DA should equal to 1.
-    SB : ndarray
-        A n by 1 array, each SB(i) represent the mass of supply on ith type b vertex. The sum of SB should equal to 1.
-    C : tensor
-        A n by n cost matrix, each i and j represent the cost between ith type b and jth type a vertex.
-    eps : tensor
-        The scaling factor (scalar) of cost metric. The value of epsilon in paper. 
+    ----------------
+    DA : tensor, shape (dim_a,)
+        A dim_a by 1 tensor, the weight of samples from the demand distribution (type a), each DA[i] represents the mass of demand on i-th type a vertex. The sum of DA should equal to 1.
+    SB : tensor, shape (dim_b,)
+        A dim_a by 1 tensor, the weight of samples from the source distribution(type b), each SB[i] represents the mass of supply on i-th type b vertex. The sum of SB should equal to 1.
+    C : tensor, shape (dim_b, dim_a)
+        A dim_b by dim_a cost matrix, each C(i,j) represents the cost between i-th type b and j-th type a vertex.
+    eps : float
+        The additive error of optimal transport distance, the value of :math:`\epsilon` in paper [2]_.
+    device : torch.device
+        The device where the computation will be executed. (e.g. torch.device('cuda:0') for GPU)
     
 
     Returns
-    -------
-    F, yA, yB, total_cost
-    F : tensor
-        A n by n matrix, each i and j represents the flow (transport plan) between ith type b and jth type a vertex.
-    yA : tensor
-        A 1 by n array, each i represents the final dual value of ith type a vertex.
-    yB : tensor
-        A 1 by n array, each i represents the final dual value of ith type b vertex.
-    total_cost : tensor
-        The total cost of the final transport solution.
+    ----------------
+    F : tensor, shape (dim_b, dim_a)
+        A dim_b by dim_a tensor, F(i,j) represents the flow (transport plan) between i-th type b and j-th type a vertex.
+    yA : tensor, shape (dim_a,)
+        A 1 by dim_a array, each yA[i] represents the final dual weight of i-th type a vertex.
+    yB : tensor, shape (dim_b,)
+        A 1 by dim_b array, each yB[i] represents the final dual value of i-th type b vertex.
+    total_cost : float
+        The total cost of the final additive approximate optimal transport plan.
 
 
     References
-    ----------
-    .. [2] Lahn, Nathaniel, Sharath Raghvendra, and Kaiyi Zhang. A combinatorial algorithm for approximating the optimal transport 
-    in the parallel and mpc settings. Advances in Neural Information Processing Systems (NeurIPS) 36, 2023
+    ----------------
+    .. [2] Lahn Nathaniel, Sharath Raghvendra, and Kaiyi Zhang. A combinatorial algori-thm for approximating the optimal transport in the parallel and mpc settings. Advances in Neural Information Processing Systems (NeurIPS) 36, 2023
 
     """
     torch.manual_seed(0)

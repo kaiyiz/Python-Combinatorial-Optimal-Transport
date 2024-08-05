@@ -15,8 +15,8 @@ functions
    assignment_torch
    transport_torch
    transport_lmr
-   OT_Profile
-   RPW
+   ot_profile
+   rpw
 
 Main :py:mod:`cot` functions
 --------------------------------
