@@ -1,0 +1,6 @@
+﻿cot.transport\_lmr
+==================
+
+.. currentmodule:: cot
+
+.. autofunction:: transport_lmr

@@ -1,0 +1,6 @@
+﻿cot.ot\_profile
+===============
+
+.. currentmodule:: cot
+
+.. autofunction:: ot_profile

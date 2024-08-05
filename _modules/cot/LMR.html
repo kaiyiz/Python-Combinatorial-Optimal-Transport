@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>cot.LMR &mdash; PyCoOT: Python Combinatorial Optimal Transport 0.1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=19f00094" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../../_static/documentation_options.js?v=2709fde1"></script>
+        <script src="../../_static/doctools.js?v=9a2dae69"></script>
+        <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            PyCoOT: Python Combinatorial Optimal Transport
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../index.html">PyCoOT: Python Combinatorial Optimal Transport</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../functions.html">functions</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">PyCoOT: Python Combinatorial Optimal Transport</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">cot.LMR</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for cot.LMR</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">jpype</span>
+<span class="kn">import</span> <span class="nn">jpype.imports</span>
+<span class="kn">from</span> <span class="nn">jpype.types</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="kn">import</span> <span class="nn">pkg_resources</span>
+
+<span class="n">jarLocation</span> <span class="o">=</span> <span class="n">pkg_resources</span><span class="o">.</span><span class="n">resource_filename</span><span class="p">(</span><span class="s1">&#39;cot&#39;</span><span class="p">,</span> <span class="s1">&#39;optimaltransport.jar&#39;</span><span class="p">)</span>
+<span class="k">try</span><span class="p">:</span>
+    <span class="n">jpype</span><span class="o">.</span><span class="n">startJVM</span><span class="p">(</span><span class="s2">&quot;-Xmx128g&quot;</span><span class="p">,</span> <span class="n">classpath</span><span class="o">=</span><span class="p">[</span><span class="n">jarLocation</span><span class="p">])</span>
+<span class="k">except</span> <span class="ne">OSError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+    <span class="k">if</span> <span class="s1">&#39;JVM is already started&#39;</span> <span class="ow">in</span> <span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">):</span>
+        <span class="k">pass</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="n">e</span>
+<span class="c1"># jpype.startJVM(&quot;-Xmx128g&quot;, classpath=[&#39;./optimaltransport.jar&#39;])</span>
+<span class="kn">from</span> <span class="nn">optimaltransport</span> <span class="kn">import</span> <span class="n">Mapping</span>
+
+
+<div class="viewcode-block" id="transport_lmr">
+<a class="viewcode-back" href="../../gen_modules/cot.transport_lmr.html#cot.transport_lmr">[docs]</a>
+<span class="k">def</span> <span class="nf">transport_lmr</span><span class="p">(</span><span class="n">DA</span><span class="p">,</span> <span class="n">SB</span><span class="p">,</span> <span class="n">C</span><span class="p">,</span> <span class="n">eps</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    This function sloves the additive approximation of optimal transport problem between two discrete distributions </span>
+<span class="sd">    and returns the approximated cost based on the graph-based additive approximation algorithm [1]_ for OT.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    DA : numpy array, shape (n,)</span>
+<span class="sd">        A n by 1 tensor, the weight of samples from the demand distribution (type a), each DA[i] represents the mass of demand on i-th type a vertex. The sum of DA should equal to 1.</span>
+<span class="sd">    SB : numpy array, shape (n,)</span>
+<span class="sd">        A n by 1 tensor, the weight of samples from the source distribution (type b), each SB[i] represents the mass of supply on i-th type b vertex. The sum of SB should equal to 1.</span>
+<span class="sd">    C : numpy array, shape (n, n)</span>
+<span class="sd">        A n by n cost matrix, each C(i,j) represents the cost between i-th type b and j-th type a vertex.</span>
+<span class="sd">    eps : float</span>
+<span class="sd">        The additive error of optimal transport distance, the value of :math:`\epsilon` in the LMR paper [1]_ .</span>
+<span class="sd">    </span>
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    ot_cost : float</span>
+
+<span class="sd">    References</span>
+<span class="sd">    ----------</span>
+<span class="sd">    .. [1] Lahn, Nathaniel, Deepika Mulchandani, and Sharath Raghvendra. A graph theoretic additive approximation of optimal transport. </span>
+<span class="sd">        Advances in Neural Information Processing Systems (NeurIPS) 32, 2019</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">nz</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">DA</span><span class="p">)</span>
+    <span class="n">gtSolver</span> <span class="o">=</span> <span class="n">Mapping</span><span class="p">(</span><span class="n">nz</span><span class="p">,</span> <span class="nb">list</span><span class="p">(</span><span class="n">DA</span><span class="p">),</span> <span class="nb">list</span><span class="p">(</span><span class="n">SB</span><span class="p">),</span> <span class="n">C</span><span class="p">,</span> <span class="n">eps</span><span class="p">)</span>
+    <span class="n">ot_cost</span> <span class="o">=</span> <span class="n">gtSolver</span><span class="o">.</span><span class="n">getTotalCost</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">ot_cost</span></div>
+
+
+
+<div class="viewcode-block" id="ot_profile">
+<a class="viewcode-back" href="../../gen_modules/cot.ot_profile.html#cot.ot_profile">[docs]</a>
+<span class="k">def</span> <span class="nf">ot_profile</span><span class="p">(</span><span class="n">DA</span><span class="p">,</span> <span class="n">SB</span><span class="p">,</span> <span class="n">C</span><span class="p">,</span> <span class="n">eps</span><span class="p">,</span> <span class="n">p</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    This function computes the approximated Optimal Transport profile (OT-Profile) [3]_ between two discrete distributions by leveraging the LMR algorithm [1]_.</span>
+<span class="sd">    The OT-profile is a function of the cost of α-optimal paritial transport cost as the transported mass α the variables. </span>
+<span class="sd">    This returns the OT-profile as a 2 by k array, where the first row represents the amount of transported mass and the second row represents the corresponding cost of optimal partial transport.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    DA : numpy array</span>
+<span class="sd">        A n by 1 array, each DA(i) represent the mass of demand on ith type a vertex. The sum of DA should equal to 1.</span>
+<span class="sd">    SB : numpy array</span>
+<span class="sd">        A n by 1 array, each SB(i) represent the mass of supply on ith type b vertex. The sum of SB should equal to 1.</span>
+<span class="sd">    C : numpy array</span>
+<span class="sd">        A n by n cost matrix, each C(i,j) represents the cost between ith type b and jth type a vertex.</span>
+<span class="sd">    eps : float</span>
+<span class="sd">        The additive error of OT-Profile, the value of :math:`\epsilon` in paper [3]_.</span>
+<span class="sd">    </span>
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    ot_profile : 2 by k numpy array</span>
+<span class="sd">        A 2 by k array, first row represent the amount of transported mass, second row represent the corresponding cost of optimal partial transport.</span>
+
+<span class="sd">    References</span>
+<span class="sd">    ----------</span>
+<span class="sd">    .. [1] Lahn, Nathaniel, Deepika Mulchandani, and Sharath Raghvendra. A graph theoretic additive approximation of optimal transport. </span>
+<span class="sd">        Advances in Neural Information Processing Systems (NeurIPS) 32, 2019</span>
+<span class="sd">    .. [3] Phatak, Abhijeet, et al. Computing all optimal partial transports. International Conference on Learning Representations (ICLR). 2023.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># eps : acceptable additive error</span>
+    <span class="c1"># q_idx : index to get returned values</span>
+    <span class="n">nz</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">DA</span><span class="p">)</span>
+    <span class="n">C</span> <span class="o">=</span> <span class="n">C</span><span class="o">**</span><span class="n">p</span>
+    <span class="n">alphaa</span> <span class="o">=</span> <span class="mf">4.0</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">C</span><span class="p">)</span><span class="o">/</span><span class="n">eps</span>
+    <span class="n">gtSolver</span> <span class="o">=</span> <span class="n">Mapping</span><span class="p">(</span><span class="n">nz</span><span class="p">,</span> <span class="nb">list</span><span class="p">(</span><span class="n">DA</span><span class="p">),</span> <span class="nb">list</span><span class="p">(</span><span class="n">SB</span><span class="p">),</span> <span class="n">C</span><span class="p">,</span> <span class="n">eps</span><span class="p">)</span>
+    <span class="n">APinfo</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">gtSolver</span><span class="o">.</span><span class="n">getAPinfo</span><span class="p">())</span> <span class="c1"># augmenting path information</span>
+    <span class="c1"># 0-&gt;Number of iterations(phase id)</span>
+    <span class="c1"># 1-&gt;Length of augmenting path(AP)</span>
+    <span class="c1"># 2-&gt;Flow of AP (transported mass)</span>
+    <span class="c1"># 3-&gt;AP transportation cost</span>
+    <span class="c1"># 4-&gt;Dual weight of the AP beginning vertex (AP net cost we actually use)(matching cost is the cumulative sum)(matching cost 1st derivative)</span>
+    <span class="c1"># 5-&gt;Vertex index at the beginning of AP</span>
+    <span class="c1"># 6-&gt;lt value of current phase((matching cost 2nd derivative = lt/number of pathes in phase)</span>
+
+    <span class="c1"># Clean and process APinfo data</span>
+    <span class="n">clean_mask</span> <span class="o">=</span> <span class="p">(</span><span class="n">APinfo</span><span class="p">[:,</span><span class="mi">2</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="n">APinfo_cleaned</span> <span class="o">=</span> <span class="n">APinfo</span><span class="p">[</span><span class="n">clean_mask</span><span class="p">]</span>
+
+    <span class="n">cost_AP</span> <span class="o">=</span> <span class="n">APinfo_cleaned</span><span class="p">[:,</span><span class="mi">4</span><span class="p">]</span> <span class="o">*</span> <span class="n">APinfo_cleaned</span><span class="p">[:,</span><span class="mi">2</span><span class="p">]</span>
+    <span class="n">cumCost</span> <span class="o">=</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">cumsum</span><span class="p">(</span><span class="n">cost_AP</span><span class="p">)</span><span class="o">/</span><span class="p">(</span><span class="n">alphaa</span><span class="o">*</span><span class="n">alphaa</span><span class="o">*</span><span class="n">nz</span><span class="p">))</span><span class="o">**</span><span class="p">(</span><span class="mi">1</span><span class="o">/</span><span class="n">p</span><span class="p">)</span>
+
+    <span class="n">cumFlow</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">cumsum</span><span class="p">((</span><span class="n">APinfo_cleaned</span><span class="p">[:,</span><span class="mi">2</span><span class="p">])</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">))</span>
+    <span class="n">totalFlow</span> <span class="o">=</span> <span class="n">cumFlow</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+    <span class="n">flowProgress</span> <span class="o">=</span> <span class="p">(</span><span class="n">cumFlow</span><span class="p">)</span><span class="o">/</span><span class="p">(</span><span class="mf">1.0</span> <span class="o">*</span> <span class="n">totalFlow</span><span class="p">)</span>
+
+    <span class="n">OT_profile</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">vstack</span><span class="p">((</span><span class="n">flowProgress</span><span class="p">,</span> <span class="n">cumCost</span><span class="p">))</span>
+    <span class="k">return</span> <span class="n">OT_profile</span></div>
+
+
+<div class="viewcode-block" id="rpw">
+<a class="viewcode-back" href="../../gen_modules/cot.rpw.html#cot.rpw">[docs]</a>
+<span class="k">def</span> <span class="nf">rpw</span><span class="p">(</span><span class="n">DA</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">SB</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">dist</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">eps</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span> <span class="n">k</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">p</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Computes the approximated Robust Partial p-Wasserstein (RPW) distance [4]_ between two discrete distributions.</span>
+<span class="sd">    The RPW metric provides a robust distance between distributions by considering partial optimal transport plan.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    DA : numpy array, shape (n,)</span>
+<span class="sd">        A n by 1 array, each DA(i) represent the mass of demand on ith type a vertex. The sum of DA should equal to 1.</span>
+<span class="sd">    SB : numpy array, shape (n,)</span>
+<span class="sd">        A n by 1 array, each SB(i) represent the mass of supply on ith type b vertex. The sum of SB should equal to 1.</span>
+<span class="sd">    dist : numpy array, shape (n, n)</span>
+<span class="sd">        A n by n cost matrix, each C(i,j) represents the cost between ith type b and jth type a vertex.</span>
+<span class="sd">    eps : float, default=0.1</span>
+<span class="sd">        The additive error of OT-Profile, the value of :math:`\epsilon` in paper [4]_.</span>
+<span class="sd">    k : int, default=1</span>
+<span class="sd">        Scaling factor in the RPW distance.</span>
+<span class="sd">    p : int, default=1</span>
+<span class="sd">        The order of the Wasserstein distance.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    pk_rpw : float</span>
+<span class="sd">        The computed approximated RPW distance between the two distributions.</span>
+
+<span class="sd">    References</span>
+<span class="sd">    ----------</span>
+<span class="sd">    .. [4] Raghvendra, Sharath, Pouyan Shirzadian, and Kaiyi Zhang. &quot;A New Robust Partial p-Wasserstein-Based Metric for Comparing Distributions.&quot; Forty-first International Conference on Machine Learning.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">nz</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">DA</span><span class="p">)</span>
+    <span class="n">dist</span> <span class="o">=</span> <span class="n">dist</span><span class="o">**</span><span class="n">p</span>
+    <span class="n">alphaa</span> <span class="o">=</span> <span class="mf">4.0</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">dist</span><span class="p">)</span><span class="o">/</span><span class="n">eps</span>
+    <span class="n">gtSolver</span> <span class="o">=</span> <span class="n">Mapping</span><span class="p">(</span><span class="n">nz</span><span class="p">,</span> <span class="nb">list</span><span class="p">(</span><span class="n">DA</span><span class="p">),</span> <span class="nb">list</span><span class="p">(</span><span class="n">SB</span><span class="p">),</span> <span class="n">dist</span><span class="p">,</span> <span class="n">eps</span><span class="p">)</span>
+    <span class="n">APinfo</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">gtSolver</span><span class="o">.</span><span class="n">getAPinfo</span><span class="p">())</span> <span class="c1"># augmenting path information</span>
+    <span class="c1"># 0-&gt;Number of iterations(phase id)</span>
+    <span class="c1"># 1-&gt;Length of augmenting path(AP)</span>
+    <span class="c1"># 2-&gt;Flow of AP (transported mass)</span>
+    <span class="c1"># 3-&gt;AP transportation cost</span>
+    <span class="c1"># 4-&gt;Dual weight of the AP beginning vertex (AP net cost we actually use)(matching cost is the cumulative sum)(matching cost 1st derivative)</span>
+    <span class="c1"># 5-&gt;Vertex index at the beginning of AP</span>
+    <span class="c1"># 6-&gt;lt value of current phase((matching cost 2nd derivative = lt/number of pathes in phase)</span>
+
+    <span class="c1"># Clean and process APinfo data</span>
+    <span class="n">clean_mask</span> <span class="o">=</span> <span class="p">(</span><span class="n">APinfo</span><span class="p">[:,</span><span class="mi">2</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="n">APinfo_cleaned</span> <span class="o">=</span> <span class="n">APinfo</span><span class="p">[</span><span class="n">clean_mask</span><span class="p">]</span>
+
+    <span class="n">cost_AP</span> <span class="o">=</span> <span class="n">APinfo_cleaned</span><span class="p">[:,</span><span class="mi">4</span><span class="p">]</span> <span class="o">*</span> <span class="n">APinfo_cleaned</span><span class="p">[:,</span><span class="mi">2</span><span class="p">]</span>
+    <span class="n">cumCost</span> <span class="o">=</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">cumsum</span><span class="p">(</span><span class="n">cost_AP</span><span class="p">)</span><span class="o">/</span><span class="p">(</span><span class="n">alphaa</span><span class="o">*</span><span class="n">alphaa</span><span class="o">*</span><span class="n">nz</span><span class="p">))</span><span class="o">**</span><span class="p">(</span><span class="mi">1</span><span class="o">/</span><span class="n">p</span><span class="p">)</span>
+    <span class="c1"># cumCost = np.cumsum(cost_AP)/(alphaa*alphaa*nz)</span>
+
+    <span class="n">cumCost</span> <span class="o">*=</span> <span class="mi">1</span><span class="o">/</span><span class="n">k</span>
+    <span class="n">totalCost</span> <span class="o">=</span> <span class="n">cumCost</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+    <span class="k">if</span> <span class="n">totalCost</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">normalized_cumcost</span> <span class="o">=</span> <span class="p">(</span><span class="n">cumCost</span><span class="p">)</span> <span class="o">*</span> <span class="mf">0.0</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">normalized_cumcost</span> <span class="o">=</span> <span class="p">(</span><span class="n">cumCost</span><span class="p">)</span><span class="o">/</span><span class="p">(</span><span class="mf">1.0</span> <span class="o">*</span> <span class="n">totalCost</span><span class="p">)</span>
+
+    <span class="n">maxdual</span> <span class="o">=</span> <span class="n">APinfo_cleaned</span><span class="p">[:,</span><span class="mi">4</span><span class="p">]</span><span class="o">/</span><span class="n">alphaa</span><span class="o">*</span><span class="mi">1</span><span class="o">/</span><span class="n">k</span>
+    <span class="n">final_dual</span> <span class="o">=</span> <span class="n">maxdual</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+    <span class="k">if</span> <span class="n">final_dual</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">normalized_maxdual</span> <span class="o">=</span> <span class="n">maxdual</span> <span class="o">*</span> <span class="mf">0.0</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">normalized_maxdual</span> <span class="o">=</span> <span class="n">maxdual</span><span class="o">/</span><span class="n">final_dual</span>
+
+    <span class="n">cumFlow</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">cumsum</span><span class="p">((</span><span class="n">APinfo_cleaned</span><span class="p">[:,</span><span class="mi">2</span><span class="p">])</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">))</span>
+    <span class="n">totalFlow</span> <span class="o">=</span> <span class="n">cumFlow</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+    <span class="n">flowProgress</span> <span class="o">=</span> <span class="p">(</span><span class="n">cumFlow</span><span class="p">)</span><span class="o">/</span><span class="p">(</span><span class="mf">1.0</span> <span class="o">*</span> <span class="n">totalFlow</span><span class="p">)</span>
+
+    <span class="n">d_cost</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">flowProgress</span><span class="p">)</span> <span class="o">-</span> <span class="n">cumCost</span>
+    <span class="n">d_ind_a</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nonzero</span><span class="p">(</span><span class="n">d_cost</span><span class="o">&lt;=</span><span class="mi">0</span><span class="p">)[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span><span class="o">-</span><span class="mi">1</span>
+    <span class="n">d_ind_b</span> <span class="o">=</span> <span class="n">d_ind_a</span> <span class="o">+</span> <span class="mi">1</span>
+    <span class="n">alpha</span> <span class="o">=</span> <span class="n">find_intersection_point</span><span class="p">(</span><span class="n">flowProgress</span><span class="p">[</span><span class="n">d_ind_a</span><span class="p">],</span> <span class="n">d_cost</span><span class="p">[</span><span class="n">d_ind_a</span><span class="p">],</span> <span class="n">flowProgress</span><span class="p">[</span><span class="n">d_ind_b</span><span class="p">],</span> <span class="n">d_cost</span><span class="p">[</span><span class="n">d_ind_b</span><span class="p">])</span>
+    <span class="n">pk_rpw</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">-</span> <span class="n">alpha</span>
+    <span class="k">return</span> <span class="n">pk_rpw</span></div>
+
+
+<span class="k">def</span> <span class="nf">find_intersection_point</span><span class="p">(</span><span class="n">x1</span><span class="p">,</span> <span class="n">y1</span><span class="p">,</span> <span class="n">x2</span><span class="p">,</span> <span class="n">y2</span><span class="p">):</span>
+    <span class="c1"># x1 &lt; x2</span>
+    <span class="c1"># y1 &gt; 0</span>
+    <span class="c1"># y2 &lt; 0</span>
+    <span class="c1"># y = ax + b</span>
+    <span class="c1"># find x when y = 0</span>
+    <span class="n">a</span> <span class="o">=</span> <span class="p">(</span><span class="n">y2</span><span class="o">-</span><span class="n">y1</span><span class="p">)</span><span class="o">/</span><span class="p">(</span><span class="n">x2</span><span class="o">-</span><span class="n">x1</span><span class="p">)</span>
+    <span class="n">b</span> <span class="o">=</span> <span class="n">y1</span> <span class="o">-</span> <span class="n">a</span><span class="o">*</span><span class="n">x1</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="o">-</span><span class="n">b</span><span class="o">/</span><span class="n">a</span>
+    <span class="k">return</span> <span class="n">x</span>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, Kaiyi Zhang.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

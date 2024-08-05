@@ -1,0 +1,6 @@
+﻿cot.transport\_torch
+====================
+
+.. currentmodule:: cot
+
+.. autofunction:: transport_torch

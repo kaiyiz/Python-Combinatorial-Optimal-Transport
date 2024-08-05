@@ -1,0 +1,6 @@
+﻿cot.assignment\_torch
+=====================
+
+.. currentmodule:: cot
+
+.. autofunction:: assignment_torch

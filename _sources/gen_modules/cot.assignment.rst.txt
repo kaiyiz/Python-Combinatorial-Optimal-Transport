@@ -1,0 +1,6 @@
+﻿cot.assignment
+==============
+
+.. currentmodule:: cot
+
+.. autofunction:: assignment

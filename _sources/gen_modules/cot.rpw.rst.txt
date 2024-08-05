@@ -1,0 +1,6 @@
+﻿cot.rpw
+=======
+
+.. currentmodule:: cot
+
+.. autofunction:: rpw
