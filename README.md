@@ -26,9 +26,13 @@ pip install PyCoOT
 import numpy as np
 from cot import transport_lmr
 
-DA = np.array([...])  # Demand array
-SB = np.array([...])  # Supply array
-C = np.array([...])   # Cost matrix
+n = 100
+DA = np.random.rand(n)  # Demand array
+DA = DA/np.sum(DA)
+SB = np.random.rand(n)  # Supply array
+SB = SB/np.sum(SB)
+C = np.random.rand(n,n)   # Cost matrix
+C = C/C.max()
 delta = 0.1           # Approximation error
 
 ot_cost = transport_lmr(DA, SB, C, delta)
@@ -41,12 +45,20 @@ print(f"1-Wasserstein Distance (LMR Algorithm): {ot_cost}")
 import torch
 from cot import transport_torch
 
-DA = torch.tensor([...])  # Demand array
-SB = torch.tensor([...])  # Supply array
-C = torch.tensor([...])   # Cost matrix
+n = 100
+device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+DA = np.random.rand(n)  # Demand array
+DA = DA/np.sum(DA)
+DA_tensor = torch.tensor(DA, device=device)
+SB = np.random.rand(n)  # Supply array
+SB = SB/np.sum(SB)
+SB_tensor = torch.tensor(SB, device=device)
+C = np.random.rand(n,n)   # Cost matrix
+C = C/C.max()
+C_tensor = torch.tensor(C, device=device)
 delta = 0.1               # Approximation error
 
-ot_cost = transport_torch(DA, SB, C, delta)
+F, yA, yB, ot_cost = transport_torch(DA_tensor, SB_tensor, C_tensor, delta, device=device)
 print(f"1-Wasserstein Distance (Push-Relabel): {ot_cost}")
 ```
 
@@ -57,8 +69,10 @@ import numpy as np
 import torch
 from cot import assignment, assignment_torch
 
-W = np.array([...])   # Cost matrix
-C = np.max(W)         # Scale of cost metric
+n = 100
+W = np.random.rand(n,n)   # Cost matrix
+W = W/W.max()
+C = 1             # Scale of cost metric
 delta = 0.1           # Approximation error
 
 # NumPy implementation
@@ -66,8 +80,9 @@ Mb, yA, yB, assignment_cost = assignment(W, C, delta)
 print(f"Bipartite Assignment Cost (Push-Relabel, NumPy): {assignment_cost}")
 
 # Torch implementation
-W_torch = torch.tensor(W)
-Mb, yA, yB, assignment_cost = assignment_torch(W_torch, C, delta)
+device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+W_torch = torch.tensor(W, device=device)
+Mb, yA, yB, assignment_cost = assignment_torch(W_torch, C, delta, device=device)
 print(f"Bipartite Assignment Cost (Push-Relabel, Torch): {assignment_cost}")
 ```
 
@@ -75,18 +90,21 @@ print(f"Bipartite Assignment Cost (Push-Relabel, Torch): {assignment_cost}")
 
 ```python
 import numpy as np
-from cot import OT_Profile
+from cot import ot_profile
 from matplotlib import pyplot as plt
 
-DA = np.array([...])
-SB = np.array([...])
-C = np.array([...])
-delta = 0.1
+n = 100
+DA = np.random.rand(n)  # Demand array
+DA = DA/np.sum(DA)
+SB = np.random.rand(n)  # Supply array
+SB = SB/np.sum(SB)
+C = np.random.rand(n,n)   # Cost matrix
+C = C/C.max()
 
-ot_profile = OT_Profile(DA, SB, C, delta)
-print(f"Optimal Transport Profile: {ot_profile}")
+otp = ot_profile(DA, SB, C, delta)
+print(f"Optimal Transport Profile: {otp}")
 
-plt.plot(ot_profile[0], ot_profile[1])
+plt.plot(otp[0], otp[1])
 plt.xlabel("Transported Mass")
 plt.ylabel("Optimal Partial Transport Cost")
 plt.show()
@@ -96,16 +114,20 @@ plt.show()
 
 ```python
 import numpy as np
-from cot import RPW
+from cot import rpw
 
-DA = np.array([...])
-SB = np.array([...])
-C = np.array([...])
+n = 100
+DA = np.random.rand(n)  # Demand array
+DA = DA/np.sum(DA)
+SB = np.random.rand(n)  # Supply array
+SB = SB/np.sum(SB)
+C = np.random.rand(n,n)   # Cost matrix
+C = C/C.max()
 p = 1
 k = 1
 delta = 0.1
 
-rpw_cost = RPW(DA, SB, C, delta, k, p)
+rpw_cost = rpw(DA, SB, C, delta, k, p)
 print(f"Robust Partial p-Wasserstein Distance: {rpw_cost}")
 ```
 
