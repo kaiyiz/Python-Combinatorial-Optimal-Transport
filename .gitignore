@@ -18,5 +18,4 @@ docs/_build
 docs/source/gen_modules
 
 # other
-dir_tree.txt
-print_tree.py
+.pypirc
