@@ -7,7 +7,8 @@ Contests
    :maxdepth: 1
 
    self
-   functions
+   API
+   Related work
 
 
 .. include:: ../../README.md

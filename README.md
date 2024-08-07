@@ -1,5 +1,7 @@
 # Python Combinatorial Optimal Transport (PyCoOT)
 
+Website: [https://kaiyiz.github.io/Python-Combinatorial-Optimal-Transport/](https://kaiyiz.github.io/Python-Combinatorial-Optimal-Transport/)
+
 ## Installation
 
 ```bash
@@ -18,9 +20,19 @@ pip install PyCoOT
 - **Optimal Transport Profile:** Detailed calculation of optimal transport profiles between discrete distributions.
 - **Robust Partial $p$-Wasserstein Distance:** An outlier robust metric for comparing distributions based on partial $p$-Wasserstein distance.
 
-## Quick Start
+## Dependencies
+This library requires JVM (Java 8 or higher) for for the Java-based combinatorial algorithm implementation. 
+The library is tested with Python 3.9 and relies on the following Python modules.
+```
+NumPy (v1.24)
+PyTorch (v1.13)
+jpype1 (v1.5) 
+```
 
-### 1. Computing 1-Wasserstein Distance (LMR Algorithm)
+## Examples
+
+### 1. LMR Algorithm (1-Wasserstein Distance Computation)
+The `cot.transport_lmr` module is based on [LMR algorithm](https://github.com/nathaniellahn/CombinatorialOptimalTransport), which developed an efficient combinatorial algorithm for computing additive approximations of optimal transport distances between discrete distributions.
 
 ```python
 import numpy as np
@@ -39,7 +51,9 @@ ot_cost = transport_lmr(DA, SB, C, delta)
 print(f"1-Wasserstein Distance (LMR Algorithm): {ot_cost}")
 ```
 
-### 2. Computing 1-Wasserstein Distance (Push-Relabel Algorithm, Torch Implementation)
+### 2. Combinatorial Parallel OT Algorithms (1-Wasserstein Distance Computation)
+The modules `cot.assignment`, `cot.assignment_torch`, and `cot.transport_torch` are based on research: [A combinatorial algorithm for approximating the optimal transport in the parallel and mpc settings]((https://github.com/kaiyiz/Combinatorial-Parallel-OT))". This work proposed efficient parallel combinatorial algorithms for computing OT and assignment problems (a special case of OT) based on push-relabel method.
+#### a. Transport Problem (Torch Implementation)
 
 ```python
 import torch
@@ -62,7 +76,7 @@ F, yA, yB, ot_cost = transport_torch(DA_tensor, SB_tensor, C_tensor, delta, devi
 print(f"1-Wasserstein Distance (Push-Relabel): {ot_cost}")
 ```
 
-### 3. Solving Bipartite Assignment Problem (Push-Relabel Algorithm)
+#### b. Assignment Problem (NumPy and Torch Implementation)
 
 ```python
 import numpy as np
@@ -86,7 +100,8 @@ Mb, yA, yB, assignment_cost = assignment_torch(W_torch, C, delta, device=device)
 print(f"Bipartite Assignment Cost (Push-Relabel, Torch): {assignment_cost}")
 ```
 
-### 4. Computing Optimal Transport Profile (OT Profile)
+### 3. Computing Optimal Transport Profile (OT Profile)
+The `LMR.OT_Profile` implementation is based on the research work: [Computing all optimal partial transport](https://github.com/kaiyiz/Computing-all-optimal-partial-transport), which proposed a method to compute a map between the cost of partial OT and transported mass. 
 
 ```python
 import numpy as np
@@ -110,8 +125,8 @@ plt.ylabel("Optimal Partial Transport Cost")
 plt.show()
 ```
 
-### 5. Robust Partial p-Wasserstein Distance (RPW)
-
+### 4. Robust Partial p-Wasserstein Distance (RPW)
+The `LMR.RPW` module is derived from research: [Robust Partial $p$-Wasserstein Based Metric](https://github.com/kaiyiz/Robust-Partial-p-Wasserstein-Based-Metric) that proposed a robust metrics for comparing distributions, focusing on partial Wasserstein distance and robustness to outliers.
 ```python
 import numpy as np
 from cot import rpw
@@ -131,13 +146,10 @@ rpw_cost = rpw(DA, SB, C, delta, k, p)
 print(f"Robust Partial p-Wasserstein Distance: {rpw_cost}")
 ```
 
-## Research Background
+## Citations
+If you find PyCoOT useful, please consider citing the following papers:
 
 ### LMR Algorithm
-
-The `cot.transport_lmr` module is based on [LMR algorithm](https://github.com/nathaniellahn/CombinatorialOptimalTransport), which developed an efficient combinatorial algorithm for computing additive approximations of optimal transport distances between discrete distributions.
-
-**Citation:**
 
 ```
 @article{lahn2019graph,
@@ -150,10 +162,6 @@ The `cot.transport_lmr` module is based on [LMR algorithm](https://github.com/na
 ```
 
 ### Combinatorial Parallel OT
-
-The modules `cot.assignment`, `cot.assignment_torch`, and `cot.transport_torch` are based on [research](https://github.com/kaiyiz/Combinatorial-Parallel-OT) "A combinatorial algorithm for approximating the optimal transport in the parallel and mpc settings", which develops efficient parallel combinatorial algorithms for computing OT and assignment problems (a special case of OT) using push-relabel techniques.
-
-**Citation:**
 
 ```
 @article{lahn2023combinatorial,
@@ -168,10 +176,6 @@ The modules `cot.assignment`, `cot.assignment_torch`, and `cot.transport_torch` 
 
 ### Computing All Optimal Partial Transport
 
-The `LMR.OT_Profile` implementation is based on [research](https://github.com/kaiyiz/Computing-all-optimal-partial-transport) exploring methods for computing all partial optimal transports between discrete distributions. 
-
-**Citation:**
-
 ```
 @inproceedings{phatak2023computing,
   title={Computing all optimal partial transports},
@@ -183,10 +187,6 @@ The `LMR.OT_Profile` implementation is based on [research](https://github.com/ka
 ```
 
 ### Robust-Partial-p-Wasserstein-Based-Metric
-
-The `LMR.RPW` module is derived from [research](https://github.com/kaiyiz/Robust-Partial-p-Wasserstein-Based-Metric) on robust metrics for comparing distributions, focusing on partial Wasserstein distance and robustness to outliers.
-
-**Citation:**
 
 ```
 @inproceedings{raghvendranew,

@@ -1,6 +1,6 @@
-.. _sphx_glr_api_reference:
+.. _sphx_api_reference:
 
-functions
+API
 =============================
 
 .. currentmodule:: cot
