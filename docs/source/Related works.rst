@@ -1,6 +1,6 @@
 .. _sphx_related_work_reference:
 
-Related work
+Related works
 ==================
 
 .. _lmr_algorithm:
