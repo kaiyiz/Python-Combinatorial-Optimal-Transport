@@ -8,7 +8,7 @@ Contests
 
    self
    API
-   Related work
+   Related works
 
 
 .. include:: ../../README.md
